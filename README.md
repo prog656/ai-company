@@ -43,6 +43,69 @@ No `npm install`. No build step. No API key in this repo — staff use the accou
 
 The desktop window is *not* Electron. It reuses the Edge engine already on your machine, which is why the repo still ships zero dependencies and stays a few hundred KB instead of a hundred megabytes. Close the window and the app is gone.
 
+## What to do after it opens
+
+It starts empty. That's expected. Four steps.
+
+**1 · Hire someone**
+
+Click **招人** in the top right. Pick who (DeepSeek Flash is fine), then pick a job.
+
+Hire three to start:
+
+| Role | What it does |
+|---|---|
+| Secretary | Turns your sentence into an instruction someone can actually follow |
+| Writer | Produces. Writes only, never judges |
+| Reviewer | Its only job is finding the flaw. It can veto |
+
+One person per role. To swap someone out, fire them from **团队** first.
+
+**2 · Say one thing**
+
+Type what you want at the bottom. **Say what you want. No pleasantries, no "could you please help me with".**
+
+Specific works well:
+
+> Write a product line under 15 characters that says this is a tool where a boss directs AI staff.
+
+Vague comes back as questions, which is slower:
+
+> Write something for me.
+
+**3 · Watch them work**
+
+Send it and leave it alone. The secretary rewrites your sentence into a brief, the writer delivers, the reviewer rejects. The interface shows who is doing what, and which tools they're reaching for.
+
+One round usually takes tens of seconds. Slow is normal — the reviewer genuinely opens files to check claims.
+
+**4 · The part only you can see**
+
+Sometimes the reviewer writes a **memo** — an amber-bordered card that only you can read.
+
+When you get one, you have two choices:
+
+- **Hand it to someone** → this is not a notification. They read it, take the work over, reply, and may write a memo back to you.
+- **Don't** → it stays between you and whoever wrote it.
+
+This is the one thing in here that isn't a demo: **a boss's power isn't assigning work, it's deciding who gets to know what.**
+
+## The three tabs
+
+| Tab | For |
+|---|---|
+| **对话** (Chat) | Saying what you want, watching them work, handling memos |
+| **团队** (Team) | Who's on staff, which model each is running, firing people |
+| **文件** (Files) | Every finished job, also written out as real markdown in `workspace/deliverables/` |
+
+## Want sharper staff?
+
+The defaults are fine. Two things make it better:
+
+**Give them a better brain.** Same DSH, but the reviewer can run on `deepseek-reasoner` (slower, reads files before judging) while the writer runs on `deepseek-flash`. Pick it when you hire.
+
+**Hire an AI from outside.** Doubao, Kimi, a local Ollama model — see "Make it yours" below.
+
 ## Why this isn't another multi-agent demo
 
 Most multi-agent demos are a room full of AIs agreeing with each other. That's not a company. That's a fan club.

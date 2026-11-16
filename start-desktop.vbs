@@ -40,5 +40,5 @@ Next
 If edge = "" Then
   sh.Run "http://localhost:4173", 1, False
 Else
-  sh.Run """" & edge & """ --app=http://localhost:4173 --window-size=540,880", 1, False
+  sh.Run """" & edge & """ --app=http://localhost:4173 --window-size=560,900", 1, False
 End If

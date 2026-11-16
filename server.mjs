@@ -487,7 +487,7 @@ const PROTOCOL = `
 如果有只该让老板知道的事，写在这里。写了就代表不会通知任何人。
 `;
 
-const byRole = (roleId) => state.staff.find((s) => s.role === roleId);
+const byRole = (roleId) => state.staff.find((s) => s.role === roleId && !s.gone);
 const staffOf = (roleName) => {
   if (!roleName) return null;
   const r = ROLES.find((x) => x.name === roleName || x.id === roleName);
@@ -712,7 +712,7 @@ const server = http.createServer(async (req, res) => {
     const eng = ENGINES.find((e) => e.id === b.engine);
     const role = ROLES.find((r) => r.id === b.role);
     if (!eng || !role) return json(res, 400, { error: "没这个人或这个岗位" });
-    if (state.staff.some((s) => s.role === role.id)) {
+    if (state.staff.some((s) => s.role === role.id && !s.gone)) {
       return json(res, 400, { error: `${role.name}这个岗位已经有人了` });
     }
     state.staff.push({
@@ -731,11 +731,18 @@ const server = http.createServer(async (req, res) => {
 
   if (p === "/api/fire" && req.method === "POST") {
     const b = await body(req);
-    const i = state.staff.findIndex((s) => s.id === b.id);
-    if (i < 0) return json(res, 404, { error: "没这个人" });
-    const [gone] = state.staff.splice(i, 1);
+    const s = state.staff.find((x) => x.id === b.id);
+    if (!s) return json(res, 404, { error: "没这个人" });
+    if (s.gone) return json(res, 400, { error: "这个人已经离职了" });
+
+    // 不删记录，只标记。历史消息里还要能显示「这是谁说的」，
+    // 直接删掉的话，旧对话里就会冒出一堆「某人（）」。
+    s.gone = true;
+    s.leftAt = Date.now();
     save();
-    emit({ kind: "system", text: `${gone.engine} 离职了` });
+
+    const e = engineOf(s.engine);
+    emit({ kind: "system", text: `${e ? e.name : s.engine}（${s.roleName}）离职了` });
     return json(res, 200, { staff: staffView() });
   }
 
