@@ -2,7 +2,7 @@
   {
     "id": "deepseek-flash",
     "name": "DeepSeek Flash",
-    "note": "快，适合写作和调度",
+    "note": "快，适合写作和调度，有手有脚能翻文件",
     "provider": "deepseek-official",
     "model": "deepseek-flash",
     "ready": true
@@ -10,7 +10,7 @@
   {
     "id": "deepseek-reasoner",
     "name": "DeepSeek Reasoner",
-    "note": "慢，但会反复推敲，适合审稿",
+    "note": "慢，但会反复推敲、会自己找证据，适合审稿",
     "provider": "deepseek-official",
     "model": "deepseek-reasoner",
     "ready": true
@@ -18,25 +18,39 @@
   {
     "id": "doubao",
     "name": "豆包",
-    "note": "先在 DSH 里配好火山方舟的密钥，再把这里的 provider 和 model 填上",
-    "ready": false
+    "type": "api",
+    "baseURL": "https://ark.cn-beijing.volces.com/api/v3",
+    "model": "doubao-pro-32k",
+    "keyEnv": "DOUBAO_API_KEY",
+    "note": "只有嘴，翻不了文件。设好 DOUBAO_API_KEY 就能招"
   },
   {
     "id": "kimi",
     "name": "Kimi",
-    "note": "先在 DSH 里配好 Moonshot 的密钥，再把这里的 provider 和 model 填上",
-    "ready": false
+    "type": "api",
+    "baseURL": "https://api.moonshot.cn/v1",
+    "model": "moonshot-v1-8k",
+    "keyEnv": "MOONSHOT_API_KEY",
+    "note": "只有嘴。设好 MOONSHOT_API_KEY 就能招"
+  },
+  {
+    "id": "mimo",
+    "name": "小米 MiMo（本地）",
+    "type": "api",
+    "baseURL": "http://localhost:11434/v1",
+    "model": "mimo",
+    "note": "本机 Ollama。先 ollama pull，再把 model 改成 ollama list 里的名字"
   },
   {
     "id": "claude",
     "name": "Claude",
-    "note": "先在 DSH 里配好 Anthropic 的密钥，再把这里的 provider 和 model 填上",
+    "note": "接口不是 OpenAI 格式，暂时接不了",
     "ready": false
   },
   {
     "id": "gpt",
     "name": "GPT",
-    "note": "先在 DSH 里配好 OpenAI 的密钥，再把这里的 provider 和 model 填上",
+    "note": "接口不是 OpenAI 格式，暂时接不了",
     "ready": false
   }
 ]

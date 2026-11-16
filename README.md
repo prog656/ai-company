@@ -88,7 +88,11 @@ duty: 出成果，只负责写，不评价
 
 Steps talk to each other through variables — whatever step `A` names as its output becomes available to later steps as `{{thatname}}`.
 
-**Give two people different brains.** Each entry in `engines.json` carries a `provider` and a `model`, and every call writes a profile patch that overrides `agent-default-model` for that one hire. Same DSH underneath — the reviewer can run on a slower model that reads the files before judging, while the writer runs on a fast one. Adding a third-party engine is the same edit, once its provider exists in DSH.
+**Give two people different brains.** Each entry in `engines.json` carries a `provider` and a `model`, and every call writes a profile patch that overrides `agent-default-model` for that one hire. Same DSH underneath — the reviewer can run on a slower model that reads the files before judging, while the writer runs on a fast one.
+
+**Hire an AI from outside.** Anything that speaks the OpenAI chat-completions format can be staff: Doubao, Kimi, an open model running on local Ollama, LM Studio, vLLM. One entry in `engines.json` plus one environment variable.
+
+The trade-off is real and worth stating: **outside staff have a mouth but no hands.** They can write and judge, but they cannot read your files, run a command, or check evidence. Put them in writing or reviewing roles, not research.
 
 ## Project layout
 

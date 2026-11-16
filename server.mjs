@@ -310,8 +310,49 @@ function patchFor(engineId) {
   }
 }
 
+// 纯 API 型员工：直接打 OpenAI 兼容接口（豆包 / Kimi / MiMo 的本地 Ollama 都吃这套）。
+// 代价必须说清楚：它们没有手脚 —— 读写文件、跑命令一概做不了。
+// 所以适合写手、审稿这类只动嘴的岗位，不适合要翻文件的调研。
+async function hireApi(eng, staff, task) {
+  // 本地模型（Ollama）不校验 key，不填 keyEnv 就是那个情况
+  const key = eng.keyEnv ? process.env[eng.keyEnv] : "local";
+  if (!key) throw new Error(`${eng.name} 没配密钥：请设置环境变量 ${eng.keyEnv}`);
+
+  const url = `${String(eng.baseURL).replace(/\/+$/, "")}/chat/completions`;
+  const t0 = Date.now();
+
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+    body: JSON.stringify({
+      model: eng.model,
+      messages: [{ role: "user", content: task }],
+      temperature: 0.7,
+    }),
+  });
+
+  if (!r.ok) {
+    const t = await r.text().catch(() => "");
+    throw new Error(`${eng.name} 返回 ${r.status}：${t.slice(0, 180)}`);
+  }
+
+  const j = await r.json();
+  const text = j?.choices?.[0]?.message?.content;
+  if (!text) throw new Error(`${eng.name} 返回了空内容`);
+
+  emit({ kind: "tool", from: staff.id, text: `${eng.name}（${eng.model}，${((Date.now() - t0) / 1000).toFixed(1)}s）` });
+  return text;
+}
+
+// 分流：api 型走 HTTP，其余走 DSH 的 CLI
+async function hire(staff, task) {
+  const eng = engineOf(staff.engine);
+  if (eng && eng.type === "api") return hireApi(eng, staff, task);
+  return hireCli(staff, task);
+}
+
 // cwd 是 workspace —— 员工只能看见自己办公室里的东西
-function hire(staff, task) {
+function hireCli(staff, task) {
   return new Promise((resolve, reject) => {
     if (!DSH) return reject(new Error("没找到 DSH。请设置环境变量 DSH_BIN 指向 dsh.cmd"));
 
@@ -639,7 +680,11 @@ const server = http.createServer(async (req, res) => {
       staff: staffView(),
       messages: state.messages.slice(-200),
       deliveries: state.deliveries,
-      engines: ENGINES,
+      engines: ENGINES.map((e) => ({
+        ...e,
+        // API 型靠环境变量里有没有 key 来判断能不能招；本地模型不设 keyEnv，永远可用
+        ready: e.type === "api" ? (e.keyEnv ? !!process.env[e.keyEnv] : true) : !!e.ready,
+      })),
       roles: ROLES.map((r) => ({ id: r.id, name: r.name, duty: r.duty })),
       workflow: WORKFLOW.steps || [],
       dshReady: !!DSH,

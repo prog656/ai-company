@@ -24,6 +24,7 @@
 | 跨站请求 | POST 校验 `Origin` 与 `Host` 一致，拒绝跨站 |
 | 员工工作目录 | 隔离在 `workspace/`，数据在 `data/` |
 | 员工可写范围 | DSH 的 `workspace-write` 策略限制在工作目录内 |
+| 第三方引擎密钥 | 只从环境变量读（`DOUBAO_API_KEY` 等），不落盘、不写进 `data/`、不进日志 |
 
 ### 明确没有做的事
 

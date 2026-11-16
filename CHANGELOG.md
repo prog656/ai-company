@@ -13,11 +13,16 @@ Versions follow [SemVer](https://semver.org/).
   同一个 DSH，不同员工不同脑子。
 - 自带两个真选项：`deepseek-flash`（快，写作和调度）与 `deepseek-reasoner`
   （慢，但会反复推敲，适合审稿）。
-- 第三方引擎（豆包 / Kimi / Claude / GPT）仍然列着但不可选 —— 它们需要先在
-  DSH 里配好对应的 provider。
+- **外部 AI 可以直接当员工。** 任何 OpenAI 兼容接口 —— 豆包、Kimi、本地
+  Ollama 跑的开源模型、LM Studio、vLLM —— 在 `engines.json` 里写一行就能招。
+  代价必须说清楚：这些员工**只有嘴，没有手脚**，不能读写文件、不能跑命令，
+  适合写手和审稿，不适合要翻证据的调研。
+- 密钥只从环境变量读（`DOUBAO_API_KEY` / `MOONSHOT_API_KEY`），不落到任何文件。
 
 ### Verified
 
+- 用一个本地假 API 顶替 MiMo 当写手：它出了稿，DeepSeek 的审稿人接过去照审，
+  并且挑出「标题里带着调试占位符」这个问题。**跨厂商协作这条路是通的。**
 - 审稿人换到 `deepseek-reasoner` 后耗时 10.8 秒，并且**自己去读了三个文件**
   才下判断；同一个岗位用 `deepseek-flash` 时只凭提示词作答。
 - 把模型名故意写成不存在的值，员工**一个字都产不出来** —— 这证明 patch
