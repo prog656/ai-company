@@ -94,6 +94,14 @@ Steps talk to each other through variables — whatever step `A` names as its ou
 
 The trade-off is real and worth stating: **outside staff have a mouth but no hands.** They can write and judge, but they cannot read your files, run a command, or check evidence. Put them in writing or reviewing roles, not research.
 
+To wire one up:
+
+1. Copy `.env.example` to `.env`
+2. Paste your key after `DOUBAO_API_KEY=`
+3. Restart with `node server.mjs`
+
+The engine becomes selectable the moment its key is present. No code changes, and `.env` never leaves your machine.
+
 ## Project layout
 
 ```

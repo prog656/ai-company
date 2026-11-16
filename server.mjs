@@ -24,6 +24,21 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
+
+// 读 .env（如果存在）。给不想折腾环境变量的人一条路：
+// 在项目根建一个 .env，写 DOUBAO_API_KEY=xxx，重启即可。
+// .env 已经在 .gitignore 里，不会被提交。
+{
+  const envFile = join(HERE, ".env");
+  if (existsSync(envFile)) {
+    for (const line of readFileSync(envFile, "utf8").split("\n")) {
+      const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
+      if (m && !line.trim().startsWith("#") && !process.env[m[1]]) {
+        process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
+      }
+    }
+  }
+}
 const CONF_DIR = join(HERE, "company");
 // data / workspace 可以用环境变量指到别处：多开测试、或者把员工工作区放到另一块盘
 const DATA_DIR = process.env.DATA_DIR ? resolve(process.env.DATA_DIR) : join(HERE, "data");
