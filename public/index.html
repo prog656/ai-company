@@ -420,6 +420,13 @@ function who(id){
 }
 const initials = (s) => (s.roleName || s.engine || "?").slice(0,1);
 
+// 后端给的是引擎 id（deepseek-flash），界面上要显示名字（DeepSeek Flash）
+function applyState(s){
+  S = s;
+  S.staff = (S.staff || []).map(x => ({ ...x, engineId: x.engine, engine: x.engineName || x.engine }));
+  return S;
+}
+
 /* ---------- 顶栏状态 ---------- */
 function head(){
   const n = S.staff.length;
@@ -638,7 +645,8 @@ async function post(path, data){
 async function doHire(){
   const r = await post("/api/hire", pick);
   if (r.error) return alert(r.error);
-  S.staff = r.staff; closeSheet(); renderAll();
+  S.staff = (r.staff || []).map(x => ({ ...x, engineId: x.engine, engine: x.engineName || x.engine }));
+  closeSheet(); renderAll();
 }
 async function doFire(id){
   if (!confirm("确定让人离职？它会忘记这期间的所有事。")) return;
@@ -691,7 +699,7 @@ $("#hireTop").onclick = openSheet;
 async function boot(){
   try {
     const r = await fetch("/api/state");
-    S = await r.json();
+    applyState(await r.json());
     S.messages.forEach(m => seen.add(m.id));
   } catch {}
   renderAll();
@@ -701,7 +709,7 @@ async function boot(){
     $("#dot").className = "pulse";
     try {
       const r = await fetch("/api/state");
-      const s = await r.json();
+      const s = applyState(await r.json());
       S.staff = s.staff; S.messages = s.messages; S.deliveries = s.deliveries; S.busy = s.busy;
       S.messages.forEach(m => seen.add(m.id));
       renderAll();

@@ -272,12 +272,59 @@ function emit(msg) {
 }
 
 // ---------- 叫醒员工 ----------
+// 每个员工用自己的模型：写一个 patch，覆盖 profile 里的 agent-default-model。
+// 没配 model 的引擎（老数据、或还没填 provider 的）走默认模型。
+const PATCH_DIR = join(DATA_DIR, "patches");
+
+function engineOf(engineId) {
+  // 新数据存 id，老数据存的是显示名，两种都认
+  return ENGINES.find((e) => e.id === engineId) || ENGINES.find((e) => e.name === engineId) || null;
+}
+
+// 给前端的员工视图：把内部 id 换成能看懂的名字和模型名
+function staffView() {
+  return state.staff.map((s) => {
+    const e = engineOf(s.engine);
+    return { ...s, engineName: e ? e.name : s.engine, modelName: e ? e.model || "" : "" };
+  });
+}
+
+function patchFor(engineId) {
+  const eng = engineOf(engineId);
+  if (!eng || !eng.provider || !eng.model) return null;
+  try {
+    mkdirSync(PATCH_DIR, { recursive: true });
+    const p = join(PATCH_DIR, `${engineId}.yml`);
+    const body = [
+      "- id: agent-default-model",
+      "  config:",
+      `    provider: ${eng.provider}`,
+      `    model: ${eng.model}`,
+      "",
+    ].join("\n");
+    writeFileSync(p, body, "utf8");
+    return p;
+  } catch {
+    // 写不进去就当没配，退回默认模型 —— 不要让整单因为一个人失败
+    return null;
+  }
+}
+
 // cwd 是 workspace —— 员工只能看见自己办公室里的东西
 function hire(staff, task) {
   return new Promise((resolve, reject) => {
     if (!DSH) return reject(new Error("没找到 DSH。请设置环境变量 DSH_BIN 指向 dsh.cmd"));
 
-    const args = [`"${DSH}"`, "--profile", "headless", "--json"];
+    // 顺序有讲究：--patch 是启动器的参数，必须排在 --json / --session-id 这些应用参数前面，
+    // 否则 headless 会把它当成自己的参数并报 unknown option。
+    const args = [`"${DSH}"`, "--profile", "headless"];
+
+    const eng = ENGINES.find((e) => e.id === staff.engine);
+    if (eng) emit({ kind: "tool", from: staff.id, text: `${eng.name}（${eng.model || "默认模型"}）` });
+    const patch = patchFor(staff.engine);
+    if (patch) args.push("--patch", `"${patch}"`);
+
+    args.push("--json");
     if (staff.sessionId) args.push("--session-id", staff.sessionId);
 
     // 子进程环境里不放 COMPANY_KEY，防止员工读到密钥
@@ -589,7 +636,7 @@ const server = http.createServer(async (req, res) => {
 
   if (p === "/api/state") {
     return json(res, 200, {
-      staff: state.staff,
+      staff: staffView(),
       messages: state.messages.slice(-200),
       deliveries: state.deliveries,
       engines: ENGINES,
@@ -610,7 +657,7 @@ const server = http.createServer(async (req, res) => {
     }
     state.staff.push({
       id: `${eng.id}-${role.id}`,
-      engine: eng.name,
+      engine: eng.id,
       engineId: eng.id,
       role: role.id,
       roleName: role.name,
@@ -619,7 +666,7 @@ const server = http.createServer(async (req, res) => {
     });
     save();
     emit({ kind: "system", text: `${eng.name} 入职，岗位：${role.name}` });
-    return json(res, 200, { staff: state.staff });
+    return json(res, 200, { staff: staffView() });
   }
 
   if (p === "/api/fire" && req.method === "POST") {
@@ -629,7 +676,7 @@ const server = http.createServer(async (req, res) => {
     const [gone] = state.staff.splice(i, 1);
     save();
     emit({ kind: "system", text: `${gone.engine} 离职了` });
-    return json(res, 200, { staff: state.staff });
+    return json(res, 200, { staff: staffView() });
   }
 
   if (p === "/api/task" && req.method === "POST") {

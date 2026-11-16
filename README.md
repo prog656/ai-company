@@ -88,6 +88,8 @@ duty: 出成果，只负责写，不评价
 
 Steps talk to each other through variables — whatever step `A` names as its output becomes available to later steps as `{{thatname}}`.
 
+**Give two people different brains.** Each entry in `engines.json` carries a `provider` and a `model`, and every call writes a profile patch that overrides `agent-default-model` for that one hire. Same DSH underneath — the reviewer can run on a slower model that reads the files before judging, while the writer runs on a fast one. Adding a third-party engine is the same edit, once its provider exists in DSH.
+
 ## Project layout
 
 ```

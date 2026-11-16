@@ -1,7 +1,42 @@
 [
-  { "id": "deepseek", "name": "DeepSeek", "note": "DSH 自带，开箱可用", "ready": true },
-  { "id": "doubao", "name": "豆包", "note": "需在 DSH 中添加密钥", "ready": false },
-  { "id": "kimi", "name": "Kimi", "note": "需在 DSH 中添加密钥", "ready": false },
-  { "id": "claude", "name": "Claude", "note": "需在 DSH 中添加密钥", "ready": false },
-  { "id": "gpt", "name": "GPT", "note": "需在 DSH 中添加密钥", "ready": false }
+  {
+    "id": "deepseek-flash",
+    "name": "DeepSeek Flash",
+    "note": "快，适合写作和调度",
+    "provider": "deepseek-official",
+    "model": "deepseek-flash",
+    "ready": true
+  },
+  {
+    "id": "deepseek-reasoner",
+    "name": "DeepSeek Reasoner",
+    "note": "慢，但会反复推敲，适合审稿",
+    "provider": "deepseek-official",
+    "model": "deepseek-reasoner",
+    "ready": true
+  },
+  {
+    "id": "doubao",
+    "name": "豆包",
+    "note": "先在 DSH 里配好火山方舟的密钥，再把这里的 provider 和 model 填上",
+    "ready": false
+  },
+  {
+    "id": "kimi",
+    "name": "Kimi",
+    "note": "先在 DSH 里配好 Moonshot 的密钥，再把这里的 provider 和 model 填上",
+    "ready": false
+  },
+  {
+    "id": "claude",
+    "name": "Claude",
+    "note": "先在 DSH 里配好 Anthropic 的密钥，再把这里的 provider 和 model 填上",
+    "ready": false
+  },
+  {
+    "id": "gpt",
+    "name": "GPT",
+    "note": "先在 DSH 里配好 OpenAI 的密钥，再把这里的 provider 和 model 填上",
+    "ready": false
+  }
 ]

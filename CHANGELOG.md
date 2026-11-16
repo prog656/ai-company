@@ -4,6 +4,32 @@ All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [SemVer](https://semver.org/).
 
+## [0.5.0] - 2026-11-16
+
+### Added
+
+- **每个员工可以跑在不同的模型上。** 引擎配置现在带 `provider` + `model`，
+  每次叫醒员工都会写一份 profile patch 覆盖 `agent-default-model` ——
+  同一个 DSH，不同员工不同脑子。
+- 自带两个真选项：`deepseek-flash`（快，写作和调度）与 `deepseek-reasoner`
+  （慢，但会反复推敲，适合审稿）。
+- 第三方引擎（豆包 / Kimi / Claude / GPT）仍然列着但不可选 —— 它们需要先在
+  DSH 里配好对应的 provider。
+
+### Verified
+
+- 审稿人换到 `deepseek-reasoner` 后耗时 10.8 秒，并且**自己去读了三个文件**
+  才下判断；同一个岗位用 `deepseek-flash` 时只凭提示词作答。
+- 把模型名故意写成不存在的值，员工**一个字都产不出来** —— 这证明 patch
+  确实传到了 DSH 并且被采纳，不是被静默忽略。
+
+### Fixed
+
+- `--patch` 必须排在应用参数之前；此前放在 `--json` 后面，headless 直接报
+  `unknown option '--patch'`。
+- 员工记录原先存的是引擎显示名，现在存 id，并保留按名字查找的兼容分支，
+  老名册不会因为改名而失效。
+
 ## [0.4.0] - 2026-11-16
 
 ### Fixed
