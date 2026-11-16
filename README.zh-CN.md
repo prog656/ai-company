@@ -12,7 +12,7 @@
 
 ![AI 工作室](docs/demo.gif)
 
-## 三步跑起来
+## 怎么跑起来
 
 两条路都需要本机先装好 **DeepSeek Harness（DSH）**，账号已经能正常对话。
 

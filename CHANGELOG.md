@@ -4,6 +4,16 @@ All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [SemVer](https://semver.org/).
 
+## [0.5.1] - 2026-11-16
+
+### Fixed
+
+- **The download shipped a README with no usage guide.** v0.5.0 was tagged
+  before that section was written, so anyone who grabbed the zip got a manual
+  that explained how to install and nothing about what to do next.
+- The quick-start heading said "three steps" for a section that is actually
+  two paths of three steps each.
+
 ## [0.5.0] - 2026-11-16
 
 ### Added
