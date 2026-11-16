@@ -34,6 +34,15 @@ Either way it opens at `http://localhost:4173`. Then hire two or three people in
 
 No `npm install`. No build step. No API key in this repo — staff use the account your local DSH already has.
 
+### Two ways to open it
+
+| Double-click | What you get |
+|---|---|
+| `start.bat` | a normal tab in your browser |
+| `start-desktop.vbs` | **a standalone window** — no address bar, no tabs, no bookmarks. Looks like an installed app |
+
+The desktop window is *not* Electron. It reuses the Edge engine already on your machine, which is why the repo still ships zero dependencies and stays a few hundred KB instead of a hundred megabytes. Close the window and the app is gone.
+
 ## Why this isn't another multi-agent demo
 
 Most multi-agent demos are a room full of AIs agreeing with each other. That's not a company. That's a fan club.
