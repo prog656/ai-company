@@ -1,0 +1,22 @@
+# 运行时数据，不进仓库
+data/
+workspace/
+
+# 生成演示图时的临时目录
+_demo/
+
+# 旧版本遗留
+company/state.json
+company/staff.json
+company/state.json.migrated
+
+# 依赖（本项目零依赖，留着以防以后加）
+node_modules/
+
+# 系统杂项
+.DS_Store
+Thumbs.db
+*.log
+
+# 重建历史时的本地备份，绝不提交
+.git.bak/

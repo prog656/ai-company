@@ -1,0 +1,10 @@
+{
+  "name": "标准一件活",
+  "about": "改这个文件就是改流程：删一步、调顺序、加一步都行，不用碰代码。role 对应 company/roles/ 下的文件名；output 是这一步交付的变量名，后面的岗位可以用 {{变量名}} 引用它；needs 表示缺了这些变量就跳过这步。",
+  "steps": [
+    { "role": "secretary", "output": "plan" },
+    { "role": "researcher", "output": "facts", "needs": ["plan"] },
+    { "role": "writer", "output": "draft" },
+    { "role": "reviewer", "output": "verdict", "needs": ["draft"] }
+  ]
+}

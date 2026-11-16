@@ -1,0 +1,7 @@
+[
+  { "id": "deepseek", "name": "DeepSeek", "note": "DSH 自带，开箱可用", "ready": true },
+  { "id": "doubao", "name": "豆包", "note": "需在 DSH 中添加密钥", "ready": false },
+  { "id": "kimi", "name": "Kimi", "note": "需在 DSH 中添加密钥", "ready": false },
+  { "id": "claude", "name": "Claude", "note": "需在 DSH 中添加密钥", "ready": false },
+  { "id": "gpt", "name": "GPT", "note": "需在 DSH 中添加密钥", "ready": false }
+]

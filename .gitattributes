@@ -1,0 +1,13 @@
+# 统一换行符，避免 Windows 上出现满屏 "LF will be replaced by CRLF" 警告
+* text=auto eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+
+# 不进 release 包（git archive 时自动排除）
+data/            export-ignore
+workspace/       export-ignore
+.github/         export-ignore
+.gitattributes   export-ignore
+.gitignore       export-ignore
