@@ -4,6 +4,14 @@ All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [SemVer](https://semver.org/).
 
+## [0.5.2] - 2026-11-18
+
+### Fixed
+
+- **`start.bat` 调用了一个不存在的文件。** 它执行 `node run.mjs`，而入口是
+  `server.mjs`，所以双击启动器——README 让你做的第一件事——会直接死在
+  `Cannot find module 'run.mjs'`。v0.5.0 和 v0.5.1 的下载包都有这个问题。
+
 ## [0.5.1] - 2026-11-16
 
 ### Fixed

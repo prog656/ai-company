@@ -1,6 +1,6 @@
 {
   "name": "ai-company",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Turn the AI clients already on your machine into a company: roles, a group chat, and private memos only the boss can read.",
   "type": "module",
   "private": false,
