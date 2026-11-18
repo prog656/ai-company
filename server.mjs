@@ -794,3 +794,27 @@ server.listen(PORT, HOST, () => {
   console.log(DSH ? `  DSH: ${DSH}\n` : "  警告：没找到 DSH，员工没法干活。请设置环境变量 DSH_BIN\n");
   if (process.platform === "win32" && !process.env.NO_OPEN) exec(`start "" http://localhost:${PORT}`);
 });
+
+// 端口被占用是最常见的一种"看起来坏了"—— 上一次的窗口没关，或者双击了两次。
+// 直接抛堆栈的话，用户以为程序崩了。这里改成说人话，并且把已经在跑的那个页面打开。
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.log("");
+    console.log(`  端口 ${PORT} 已经有程序在占着了。`);
+    console.log("  多半是上一次开的窗口还没关，或者刚才双击了两次。");
+    console.log("");
+    console.log(`  已经帮你打开 http://localhost:${PORT} —— 直接就能用。`);
+    console.log(`  想重开的话，先关掉旧窗口；或者换个端口：`);
+    console.log(`    set PORT=4174 && node server.mjs`);
+    console.log("");
+    if (process.platform === "win32" && !process.env.NO_OPEN) {
+      exec(`start "" http://localhost:${PORT}`);
+    }
+    process.exit(0);
+  }
+
+  console.error("");
+  console.error("  服务器没能起来：", err.message);
+  console.error("");
+  process.exit(1);
+});

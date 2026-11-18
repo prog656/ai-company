@@ -4,6 +4,14 @@ All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [SemVer](https://semver.org/).
 
+## [0.5.3] - 2026-11-18
+
+### Fixed
+
+- **端口被占用时会甩一脸红色堆栈。** 第二次双击 `start.bat`（或者上一次的窗口没关），
+  用户看到的是 `EADDRINUSE` 和一整段调用栈，第一反应是「这软件坏了」。
+  现在改成说人话：告诉他是端口被占、多半是旧窗口没关，并且**自动把已经在跑的那个页面打开**。
+
 ## [0.5.2] - 2026-11-18
 
 ### Fixed
