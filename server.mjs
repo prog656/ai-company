@@ -110,7 +110,13 @@ function unseal(b64) {
 // 而且公开仓库里出现 C:\Users\xxx 这种字符串是很业余的。
 // 顺序：环境变量 → 各盘符的标准安装位置 → LOCALAPPDATA。
 function findDsh() {
-  if (process.env.DSH_BIN && existsSync(process.env.DSH_BIN)) return process.env.DSH_BIN;
+  // 用户显式指定的优先。但如果指错了，必须说出来 —— 静默回退会让人以为生效了，
+  // 实际跑的是自动探测找到的那个，出了问题根本查不到原因。
+  if (process.env.DSH_BIN) {
+    if (existsSync(process.env.DSH_BIN)) return process.env.DSH_BIN;
+    console.warn(`\n  ⚠ DSH_BIN 指向的文件不存在：${process.env.DSH_BIN}`);
+    console.warn("    已改为自动探测。如果你确实要指定，请检查路径。\n");
+  }
 
   const tail = ["resources", "runtime", "cli", "bin", "dsh.cmd"];
   const roots = [];
@@ -151,7 +157,20 @@ function parseMd(text) {
 function readJson(p, fallback) {
   try {
     return JSON.parse(readFileSync(p, "utf8"));
-  } catch {
+  } catch (e) {
+    // 文件不存在是正常的（第一次跑）。解析失败才是问题：员工会凭空消失，
+    // 而且下一次保存会把这个坏文件覆盖掉 —— 所以先备份，并且说出来。
+    if (e.code !== "ENOENT") {
+      const backup = `${p}.broken-${Date.now()}`;
+      try {
+        renameSync(p, backup);
+        console.warn(`\n  ⚠ ${p} 读不出来（${e.message}）`);
+        console.warn(`    已备份为 ${backup}`);
+        console.warn("    这次会用空数据启动，你的员工和记录可能不在界面上。\n");
+      } catch {
+        console.warn(`\n  ⚠ ${p} 读不出来，而且备份也失败了。\n`);
+      }
+    }
     return fallback;
   }
 }

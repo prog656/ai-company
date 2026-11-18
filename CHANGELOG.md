@@ -4,6 +4,25 @@ All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versions follow [SemVer](https://semver.org/).
 
+## [0.5.4] - 2026-11-18
+
+### Fixed
+
+- **`DSH_BIN` 指错路径时静默回退。** 设置了这个变量但路径写错，程序一声不吭地用自动探测
+  找到的那个 DSH，用户以为自己的设置生效了。现在会明确警告。
+- **数据文件损坏时一声不吭。** `roster.json` 之类被写坏，原来会静默返回空数组，员工
+  凭空消失，而且下一次保存会把坏文件覆盖掉、再也救不回来。现在会警告、并把坏文件
+  备份成 `.broken-<时间戳>` 再启动。
+
+### Tested
+
+这一轮针对「真人会怎么折腾它」补测了故障场景：
+
+- 重复双击 → 端口冲突（0.5.3 已修）
+- `DSH_BIN` 指向不存在的文件 → 现在会警告
+- `roster.json` 被写坏 → 现在会警告并备份
+- 项目放在**中文 + 空格路径**下 → 启动正常，并完整跑通一单（招人、拆活、出稿、审稿、落盘）
+
 ## [0.5.3] - 2026-11-18
 
 ### Fixed
